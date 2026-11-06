@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>逆向反應｜小灰的反應實驗室</title>
+
+<style>
+:root {
+  --green: #a5ffd6;
+  --purple: #b89aff;
+  --muted: #939bad;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 75% 20%, #30214b66, transparent 55%),
+    #0b0e17;
+  color: #f6f5fa;
+  font-family: "Microsoft JhengHei", system-ui, sans-serif;
+}
+
+button { font: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+
+header {
+  max-width: 1150px;
+  margin: auto;
+  padding: 25px;
+  border-bottom: 1px solid #ffffff15;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo { font-weight: 900; letter-spacing: 2px; }
+.logo span { color: var(--green); }
+.tag { color: var(--muted); font-size: 11px; }
+
+main {
+  max-width: 1100px;
+  margin: 55px auto;
+  padding: 0 25px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 55px;
+  align-items: center;
+}
+
+.eyebrow { color: var(--green); font-size: 12px; letter-spacing: 3px; }
+
+h1 {
+  font-size: clamp(46px, 6vw, 72px);
+  line-height: 1.2;
+  margin: 22px 0;
+  letter-spacing: -3px;
+}
+
+h1 span { color: var(--purple); }
+
+.intro {
+  color: #a1a8b8;
+  line-height: 2;
+  font-size: 15px;
+}
+
+.rules { display: flex; gap: 12px; margin-top: 30px; }
+
+.rule {
+  flex: 1;
+  border: 1px solid #ffffff20;
+  background: #ffffff04;
+  border-radius: 14px;
+  padding: 17px 12px;
+}
+
+.rule strong { color: var(--green); font-size: 14px; }
+.rule.purple strong { color: var(--purple); }
+.rule p { color: var(--muted); font-size: 12px; margin-bottom: 0; }
+
+.game {
+  background: #121723;
+  border: 1px solid #ffffff20;
+  border-radius: 24px;
+  padding: 25px;
+  box-shadow: 0 30px 90px #0005;
+}
+
+.stats { display: flex; justify-content: space-between; }
+.label { font-size: 10px; color: var(--muted); letter-spacing: 2px; }
+.number { font-size: 29px; font-weight: 800; margin-top: 6px; }
+
+.progress { height: 4px; background: #2a3040; margin-top: 20px; }
+#bar { height: 100%; width: 100%; background: var(--green); }
+
+.arena {
+  height: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#mode { font-size: 13px; color: var(--green); letter-spacing: 2px; }
+
+#arrow {
+  font-family: system-ui, sans-serif;
+  font-size: 115px;
+  line-height: 1.4;
+  color: var(--green);
+  text-shadow: 0 0 35px #a5ffd633;
+}
+
+#hint { color: var(--muted); font-size: 12px; text-align: center; min-height: 30px; }
+
+.controls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+
+.key {
+  padding: 15px 0;
+  background: #1d2535;
+  color: white;
+  border: 1px solid #394154;
+  border-radius: 12px;
+  font-size: 26px;
+  touch-action: manipulation;
+}
+
+.key:hover, .key:active { background: #34405a; border-color: var(--green); }
+
+.primary, .secondary {
+  width: 100%;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 12px;
+}
+
+.primary { background: var(--green); color: #10271c; border: 0; font-weight: 800; }
+.primary:disabled { cursor: default; opacity: .7; }
+.secondary { background: transparent; color: #c3c9d6; border: 1px solid #394154; }
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+footer { text-align: center; color: #737c90; padding: 20px; font-size: 12px; }
+
+.hidden { display: none; }
+.error { animation: shake .2s; }
+
+@keyframes shake {
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+#shareText {
+  width: 100%;
+  min-height: 90px;
+  margin-top: 12px;
+  background: #1d2535;
+  color: white;
+  border: 1px solid #394154;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+@media (max-width: 760px) {
+  main { grid-template-columns: 1fr; margin: 28px auto; gap: 28px; padding: 0 20px; }
+  header { padding: 20px; }
+  .tag { display: none; }
+  h1 { font-size: 49px; margin: 15px 0; }
+  .rules { margin-top: 20px; }
+  .game { padding: 20px; }
+  .arena { height: 230px; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo"><span>↯</span> NEON SWITCH</div>
+  <div class="tag">30 SECONDS. TRUST YOUR REFLEX.</div>
+</header>
+
+<main>
+  <section>
+    <div class="eyebrow">小灰的反應實驗室 / 001</div>
+    <h1>你的腦袋<br>會<span>轉彎</span>嗎？</h1>
+    <p class="intro">
+      眼睛說往左，手卻要往右。<br>
+      30 秒，挑戰直覺與反應的極限。<br>
+      規則很簡單，失誤也很簡單。
+    </p>
+
+    <div class="rules">
+      <div class="rule">
+        <strong>綠色 · 跟著走</strong>
+        <p>按下箭頭指的方向</p>
+      </div>
+      <div class="rule purple">
+        <strong>紫色 · 反著來</strong>
+        <p>按下箭頭相反方向</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="game" id="game" aria-label="逆向反應遊戲">
+    <div class="stats">
+      <div>
+        <div class="label">SCORE / 得分</div>
+        <div class="number" id="score">0</div>
+      </div>
+      <div>
+        <div class="label">COMBO / 連擊</div>
+        <div class="number" id="combo">0</div>
+      </div>
+      <div>
+        <div class="label">TIME / 秒</div>
+        <div class="number" id="time">30.0</div>
+      </div>
+    </div>
+
+    <div class="progress"><div id="bar"></div></div>
+
+    <div class="arena">
+      <div id="mode">準備好挑戰了嗎？</div>
+      <div id="arrow">↯</div>
+      <div id="hint" role="status">
+        答對 +10 分 · 每 5 連擊額外 +5 · 答錯 −5 分
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="key" data-dir="0" aria-label="左">←</button>
+      <button class="key" data-dir="1" aria-label="上">↑</button>
+      <button class="key" data-dir="2" aria-label="下">↓</button>
+      <button class="key" data-dir="3" aria-label="右">→</button>
+    </div>
+
+    <button class="primary" id="start">開始 30 秒挑戰 ↗</button>
+    <button class="secondary hidden" id="share">複製成績，挑戰朋友</button>
+    <textarea class="hidden" id="shareText" readonly aria-label="成績分享文字"></textarea>
+
+    <div class="bottom">
+      <span>電腦方向鍵 / 手機點按</span>
+      <span>個人最佳：<b id="best">0</b></span>
+    </div>
+  </section>
+</main>
+
+<footer>再一局，也許就破紀錄。</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const arrows = ["←", "↑", "↓", "→"];
+const opposite = [3, 2, 1, 0];
+
+let playing = false;
+let score = 0;
+let combo = 0;
+let correct = 0;
+let wrong = 0;
+let direction = 0;
+let reverse = false;
+let deadline = 0;
+let timer;
+let best = 0;
+
+try {
+  best = Number(localStorage.getItem("neon-switch-best")) || 0;
+} catch {}
+
+$("best").textContent = best;
+
+function nextQuestion() {
+  direction = Math.floor(Math.random() * 4);
+  reverse = Math.random() < 0.45;
+
+  const color = reverse ? "var(--purple)" : "var(--green)";
+
+  $("mode").textContent = reverse
+    ? "反著來 · 相反方向"
+    : "跟著走 · 相同方向";
+
+  $("mode").style.color = color;
+  $("arrow").style.color = color;
+  $("arrow").textContent = arrows[direction];
+}
+
+function startGame() {
+  clearInterval(timer);
+
+  score = 0;
+  combo = 0;
+  correct = 0;
+  wrong = 0;
+  playing = true;
+
+  $("score").textContent = "0";
+  $("combo").textContent = "0";
+  $("time").textContent = "30.0";
+  $("bar").style.width = "100%";
+  $("hint").textContent = "注意顏色，選對方向！";
+  $("start").disabled = true;
+  $("start").textContent = "挑戰進行中…";
+  $("share").classList.add("hidden");
+  $("share").textContent = "複製成績，挑戰朋友";
+  $("shareText").classList.add("hidden");
+
+  deadline = performance.now() + 30000;
+  nextQuestion();
+
+  timer = setInterval(() => {
+    const remaining = Math.max(0, (deadline - performance.now()) / 1000);
+
+    $("time").textContent = remaining.toFixed(1);
+    $("bar").style.width = `${remaining / 30 * 100}%`;
+
+    if (remaining <= 0) finishGame();
+  }, 50);
+}
+
+function answer(input) {
+  if (!playing) return;
+
+  if (performance.now() >= deadline) {
+    finishGame();
+    return;
+  }
+
+  const expected = reverse ? opposite[direction] : direction;
+
+  if (input === expected) {
+    correct++;
+    combo++;
+
+    const bonus = combo % 5 === 0 ? 5 : 0;
+    score += 10 + bonus;
+
+    $("hint").textContent = bonus
+      ? `${combo} 連擊！額外獎勵 +5 分`
+      : `漂亮！${combo} 連擊`;
+  } else {
+    wrong++;
+    combo = 0;
+    score = Math.max(0, score - 5);
+    $("hint").textContent = "按錯了！−5 分，繼續加油";
+
+    $("game").classList.remove("error");
+    void $("game").offsetWidth;
+    $("game").classList.add("error");
+  }
+
+  $("score").textContent = score;
+  $("combo").textContent = combo;
+  nextQuestion();
+}
+
+function finishGame() {
+  if (!playing) return;
+
+  playing = false;
+  clearInterval(timer);
+
+  const newRecord = score > best;
+
+  if (newRecord) {
+    best = score;
+
+    try {
+      localStorage.setItem("neon-switch-best", best);
+    } catch {}
+  }
+
+  const total = correct + wrong;
+  const accuracy = total ? Math.round(correct / total * 100) : 0;
+
+  $("time").textContent = "0.0";
+  $("bar").style.width = "0%";
+  $("best").textContent = best;
+  $("mode").textContent = newRecord ? "NEW RECORD / 新紀錄！" : "挑戰完成！";
+  $("arrow").textContent = score;
+  $("hint").textContent = `答對 ${correct} 次 · 正確率 ${accuracy}%`;
+  $("start").disabled = false;
+  $("start").textContent = "再玩一次 ↻";
+  $("share").classList.remove("hidden");
+}
+
+$("start").addEventListener("click", startGame);
+
+document.querySelectorAll("[data-dir]").forEach(button => {
+  button.addEventListener("click", () => {
+    answer(Number(button.dataset.dir));
+  });
+});
+
+document.addEventListener("keydown", event => {
+  const keys = ["ArrowLeft", "ArrowUp", "ArrowDown", "ArrowRight"];
+  const input = keys.indexOf(event.key);
+
+  if (playing && input !== -1) {
+    event.preventDefault();
+
+    if (!event.repeat) answer(input);
+  }
+});
+
+$("share").addEventListener("click", async () => {
+  let text = `我在「逆向反應」拿了 ${score} 分！你能超過我嗎？`;
+
+  if (location.protocol === "https:" || location.protocol === "http:") {
+    text += "\n" + location.href;
+  }
+
+  try {
+    await navigator.clipboard.writeText(text);
+    $("share").textContent = "已複製！貼給朋友挑戰";
+  } catch {
+    $("shareText").value = text;
+    $("shareText").classList.remove("hidden");
+    $("shareText").select();
+    $("share").textContent = "請複製下方成績文字";
+  }
+});
+</script>
+</body>
+</html>
